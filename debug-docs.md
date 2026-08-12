@@ -26,6 +26,106 @@ The current asset defines a window-height range of **800–900 mm**. The UI read
 
 Check the opening at minimum, maximum, and intermediate window heights together with minimum and maximum cabin heights. Confirm that the top of the opening never intersects the wall top or gable.
 
+## Window height overlaps the upper wood frame
+
+### Symptom
+
+Increasing the window-height Shape Key can push the top of the window frame into or through `woodFrameFrontBack`. The full 900 mm window height is geometrically valid at maximum cabin height but does not have enough structural clearance at minimum cabin height.
+
+### Cause
+
+The original window-height slider always exposed the complete exported 800–900 mm range. It treated window height as independent even though available clearance changes with cabin height.
+
+The window and wood frame use separate Shape Keys:
+
+- `widowFrame-height` raises the top of the window by approximately 100 mm.
+- Cabin/wall height creates approximately 111.325 mm of additional upper clearance.
+
+Without a dependency rule, Three.js correctly applies both morph targets but can combine them into a product state that overlaps.
+
+### Solution
+
+Two Blender empties define the collision relationship:
+
+- `window-buffer` represents the upper window clearance position.
+- `woodFrame-buffer` represents the lower structural-frame clearance position.
+
+Three.js calculates the available window-height influence from the cabin-height influence:
+
+```text
+wood buffer Y = woodFrame-buffer Basis Y
+                + maximum wall-height travel
+                  × cabin-height influence
+
+available window influence = clamp(
+    (wood buffer Y - window-buffer Y)
+    / maximum window-height travel,
+    0,
+    1
+)
+
+dynamic window maximum = minimum window height
+                         + available window influence
+                           × complete window-height range
+```
+
+The UI updates the window-height slider maximum whenever cabin height changes. At minimum cabin height the window is limited to 800 mm. Increasing cabin height progressively unlocks taller values until the full 900 mm is available. If cabin height is reduced while the selected window is too tall, application state, slider value, label, and Shape Key influence are clamped together.
+
+This is a configuration constraint rather than a collision response. Invalid geometry is prevented before it is applied.
+
+### Validation
+
+- At minimum cabin height, confirm the window cannot increase beyond 800 mm.
+- Increase cabin height gradually and confirm the available window maximum also increases.
+- At maximum cabin height, confirm the full 900 mm value is available.
+- Select a tall window, reduce cabin height, and confirm the window automatically returns to the new safe maximum.
+- Confirm `window-buffer` never passes through `woodFrame-buffer`.
+
+## Sliding window travel changes with window width
+
+### Symptom
+
+A fixed X animation distance works at one window width but stops too early or moves too far after the window-width Shape Keys resize the frame and sashes.
+
+### Cause
+
+Window width changes the physical distance required for the left sash to overlap the stationary right sash. Animating `window-LFT` with a hard-coded offset ignores the current configured width. Directly moving the sash can also interfere with its width and height morph targets.
+
+### Solution
+
+Blender provides two animation references:
+
+- `windows-anim-check` is the animation parent of `window-LFT`.
+- `windows-open-limit` represents the open X endpoint at the minimum window width.
+
+The sash keeps its Shape Keys and local transform. Three.js animates the parent instead:
+
+```text
+half width increase =
+    (selected window width - minimum window width) / 2
+
+dynamic open limit X =
+    windows-open-limit Basis X + half width increase
+
+window travel X =
+    dynamic open limit X - windows-anim-check Basis X
+
+animation parent X =
+    Basis X + window travel X × open progress
+```
+
+`open progress` moves smoothly between `0` and `1` and is clamped at both endpoints. The right sash remains stationary. If window width changes while the sash is open or moving, the dynamic travel is recalculated and the current progress is applied to the new distance.
+
+Application state controls whether the target is open or closed; the current object position is not used as the state source.
+
+### Validation
+
+- Open and close the window at minimum, maximum, and intermediate widths.
+- Confirm the left sash stops over the right sash without overshooting the frame.
+- Change width while the sash is open and confirm it remains at the correct proportional position.
+- Change width while the animation is running and confirm there is no jump or corrupted state.
+- Resize window height and cabin dimensions, then confirm the animation still operates independently.
+
 ## Fascia separates from the gable
 
 ### Symptom
