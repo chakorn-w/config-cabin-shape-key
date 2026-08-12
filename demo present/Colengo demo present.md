@@ -22,7 +22,7 @@ Research Three.js techniques for parametric assembly models and understand their
 
 ### Gathering references
 
-![[Screenshot from 2026-08-12 22-12-03.png]]
+![Gathered cabin references](<media/Screenshot from 2026-08-12 22-12-03.png>)
 
 ### Blender-to-Three.js workflow
 
@@ -56,7 +56,7 @@ The core concept is to treat the aligned Blender model as an immutable reference
 
 **TL;DR:** Let Three.js and JavaScript do a lot of math.
 
-![[Screenshot from 2026-08-12 16-06-55.png]]
+![Scale-based cabin configurator](<media/Screenshot from 2026-08-12 16-06-55.png>)
 
 ## Modeling
 
@@ -72,9 +72,9 @@ The core concept is to treat the aligned Blender model as an immutable reference
 1. Use tileable textures with `THREE.RepeatWrapping` and planar projection anchored to the `cabin.origin` empty.
 2. Check UV scale and texel density across all modular components.
 
-![[Screenshot from 2026-08-10 00-06-20.png]]
-![[Screenshot from 2026-08-10 11-07-31.png]]
-![[Screenshot from 2026-08-10 13-38-50.png]]
+![UV mapping reference](<media/Screenshot from 2026-08-10 00-06-20.png>)
+![UV checker alignment](<media/Screenshot from 2026-08-10 11-07-31.png>)
+![UV texture-density test](<media/Screenshot from 2026-08-10 13-38-50.png>)
 
 ## Texturing
 
@@ -138,7 +138,7 @@ The checker currently uses a fixed 200 mm tile size. All modular wall pieces the
 
 **Guard:** Do not remove or reorder `COLOR_1` in future Blender exports. Keep `roof.fascia.anchor` and resolve it through the central semantic node map.
 
-![[Screenshot from 2026-08-12 16-07-48.png]]
+![Fascia deformation result](<media/Screenshot from 2026-08-12 16-07-48.png>)
 
 # 🔥 Shape Keys / Morph Targets
 
@@ -152,9 +152,9 @@ https://config-cabin-shape-key.chakorn-w.workers.dev/
 
 Cabin geometry is resized with Blender Shape Keys exported as glTF morph targets, while rigid parts follow related structures through parenting or reference-based transforms.
 
-![[Screenshot from 2026-08-12 16-12-04.png]]
-![[Screenshot from 2026-08-12 16-12-18.png]]
-![[Screenshot from 2026-08-12 16-12-32.png]]
+![Shape Key cabin at minimum configuration](<media/Screenshot from 2026-08-12 16-12-04.png>)
+![Shape Key cabin at an intermediate configuration](<media/Screenshot from 2026-08-12 16-12-18.png>)
+![Shape Key cabin at maximum configuration](<media/Screenshot from 2026-08-12 16-12-32.png>)
 
 ## Modeling
 
