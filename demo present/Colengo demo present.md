@@ -54,7 +54,6 @@ https://config-cabin-assignment.chakorn-w.workers.dev/
 
 The core concept is to treat the aligned Blender model as an immutable reference and configure it through baseline-relative calculations in Three.js. Semantic mesh names, anchors, pivots, local axes, UVs, and vertex-color masks describe how each part should behave. Validated user dimensions are converted into controlled position, length, geometry, and material updates.
 
-**TL;DR:** Let Three.js and JavaScript do a lot of math.
 
 ![Scale-based cabin configurator](<media/Screenshot from 2026-08-12 16-06-55.png>)
 
@@ -171,7 +170,7 @@ Cabin geometry is resized with Blender Shape Keys exported as glTF morph targets
 5. After completing the Basis model, create the required Shape Keys for each object.
 6. Add empties as runtime references, such as fascia-origin positions, window animation markers, and collision buffers that move in relation to Shape Key values.
 7. Use standard position transforms for rigid objects that should move rather than deform, such as side walls and gables.
-8. Configure the gable Shape Key to meet the roof ridge at maximum size. This allows vertices to align with the roof without requiring a trigonometric formula in JavaScript.
+8. Configure the gable Shape Key to meet the roof ridge at maximum size. This allows vertices to align with the roof.
 
 ## UV mapping
 
