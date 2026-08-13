@@ -20,6 +20,10 @@ https://config-cabin-assignment.chakorn-w.workers.dev/
 
 Research Three.js techniques for parametric assembly models and understand their limitations.
 
+1. Identify which Blender elements and properties can be exported in GLB/glTF format, including transforms, Shape Keys, vertex colors, and mesh parent-child relationships.
+2. Determine which Blender and 3D techniques can be adapted for this project, including non-uniform scaling, Shape Keys, driver logic, and vertex colors.
+3. Plan the optimization strategy. Because the geometry is simple, the polygon count is likely to remain low. Use PNG textures initially; if performance becomes an issue, consider KTX2 texture compression.
+
 ### Gathering references
 
 ![Gathered cabin references](<media/Screenshot from 2026-08-12 22-12-03.png>)
@@ -55,6 +59,8 @@ https://config-cabin-assignment.chakorn-w.workers.dev/
 The core concept is to treat the aligned Blender model as an immutable reference and configure it through baseline-relative calculations in Three.js. Semantic mesh names, anchors, pivots, local axes, UVs, and vertex-color masks describe how each part should behave. Validated user dimensions are converted into controlled position, length, geometry, and material updates.
 
 
+![Scale-based configurator showcase](<media/Screenshot from 2026-08-13 07-47-05.png>)
+
 ![Scale-based cabin configurator](<media/Screenshot from 2026-08-12 16-06-55.png>)
 
 ## Modeling
@@ -87,6 +93,9 @@ The core concept is to treat the aligned Blender model as an immutable reference
 2. Use a tileable plywood texture from Poly Haven.
 3. Recreate selected materials in Substance 3D Painter.
 4. Export packed ORM maps at 1K resolution. This provides a practical balance between image sharpness and download size.
+
+![Prepared texture assets](<media/Screenshot from 2026-08-13 07-34-53.png>)
+![Substance 3D Painter texture workflow](<media/Screenshot from 2026-08-13 07-38-41.png>)
 
 ## Three.js and JavaScript
 
@@ -150,6 +159,8 @@ Demo:
 https://config-cabin-shape-key.chakorn-w.workers.dev/
 
 Cabin geometry is resized with Blender Shape Keys exported as glTF morph targets, while rigid parts follow related structures through parenting or reference-based transforms.
+
+![Shape Key configurator showcase](<media/Screenshot from 2026-08-13 07-49-26.png>)
 
 ![Shape Key cabin at minimum configuration](<media/Screenshot from 2026-08-12 16-12-04.png>)
 ![Shape Key cabin at an intermediate configuration](<media/Screenshot from 2026-08-12 16-12-18.png>)
@@ -316,3 +327,8 @@ animation parent X =
 `open progress` moves smoothly between `0` and `1` and is clamped at both endpoints. The right sash remains stationary. If window width changes while the sash is open or moving, the dynamic travel is recalculated and the current progress is applied to the new distance.
 
 Application state controls whether the target is open or closed; the current object position is not used as the state source.
+
+## Areas for improvement
+
+1. Improve Blender scene management by designing a workflow that clearly communicates the purpose of each component. For example, consistently name empties that mark reference positions.
+2. Develop a stronger understanding of the programming logic. I currently have little programming experience, and improving this knowledge will help me understand what the application is doing and why.
